@@ -1,209 +1,155 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Quicksand', sans-serif;
-  background: radial-gradient(circle at top left, #9333ea 0%, #0f172a 40%, #020617 100%);
-  min-height: 100vh;
-  color: #f1f5f9;
+html, body {
+  width: 100%;
   overflow-x: hidden;
 }
 
-/* 🌸 FLOATING COLOR FLOWERS (BLOBS) */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(244,63,94,0.7), rgba(168,85,247,0.3), transparent);
-  filter: blur(80px);
-  z-index: -1;
-  animation: floatFlower 18s infinite alternate ease-in-out;
-}
-
-body::after {
-  top: 60%;
-  left: 65%;
-  background: radial-gradient(circle, rgba(56,189,248,0.6), rgba(34,197,94,0.3), transparent);
-  animation-duration: 22s;
-}
-
-@keyframes floatFlower {
-  from { transform: translateY(0) translateX(0); }
-  to { transform: translateY(-120px) translateX(80px); }
+body {
+  margin: 0;
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg,#0f172a,#020617);
+  color: #f1f5f9;
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
+  width: 100%;
   margin: auto;
-  padding: 30px;
+  padding: 24px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* 🌌 GLASS CARD UPGRADE */
+.header {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f43f5e;
+  margin-bottom: 25px;
+}
+
 .card {
-  background: linear-gradient(145deg, rgba(30,41,59,.85), rgba(15,23,42,.85));
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 28px;
-  padding: 45px;
-  box-shadow: 
-    0 25px 60px rgba(0,0,0,.6),
-    inset 0 0 30px rgba(255,255,255,.03);
   width: 100%;
   max-width: 520px;
-  animation: slideUp .6s ease;
+  background: rgba(30,41,59,.85);
+  padding: 40px;
+  border-radius: 26px;
   text-align: center;
-  position: relative;
-}
-
-/* 🌈 GLOW EDGE */
-.card::after {
-  content:"";
-  position:absolute;
-  inset:-1px;
-  border-radius:28px;
-  background: linear-gradient(120deg,#f43f5e,#a855f7,#38bdf8);
-  opacity:.15;
-  filter: blur(15px);
-  z-index:-1;
-}
-
-/* 🚀 BUTTON */
-.btn-primary {
-  background: linear-gradient(135deg,#f43f5e,#a855f7);
-  color: white;
-  border: none;
-  padding: 16px 32px;
-  border-radius: 14px;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 22px;
-  transition: all .25s ease;
-  box-shadow: 0 10px 25px rgba(168,85,247,.35);
-}
-
-.btn-primary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 0 35px rgba(244,63,94,.6);
-}
-
-/* 🌙 INPUTS */
-input, select {
-  width: 100%;
-  padding: 15px;
-  margin-bottom: 16px;
-  border-radius: 14px;
-  border: 1px solid #475569;
-  background: rgba(51,65,85,.9);
-  color: white;
-  font-size: 1rem;
-  transition: .2s;
-}
-
-input:focus, select:focus {
-  border-color: #a855f7;
-  background: #0f172a;
-  box-shadow: 0 0 12px rgba(168,85,247,.4);
-}
-
-/* 🌸 SELECTION CARDS */
-.selection-card {
-  background: linear-gradient(145deg,#1e293b,#0f172a);
-  padding: 32px;
-  border-radius: 22px;
-  border: 2px solid #334155;
-  cursor: pointer;
-  transition: .3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.selection-card::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  background: linear-gradient(120deg,transparent,rgba(168,85,247,.15),transparent);
-  transform: translateX(-100%);
-  transition:.4s;
-}
-
-.selection-card:hover::after {
-  transform: translateX(100%);
-}
-
-.selection-card:hover {
-  border-color: #f43f5e;
-  transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(0,0,0,.6);
-}
-
-/* 🌐 GRID */
-.grid-2 {
-  display:grid;
-  grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
-  gap:24px;
-  width:100%;
-}
-
-.grid-3 {
-  display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
-  gap:22px;
-  width:100%;
-  margin-top:24px;
-}
-
-/* 🏷 VENDOR CARDS */
-.vendor-card {
-  background: #1e293b;
-  padding: 22px;
-  border-radius: 18px;
-  border:2px solid transparent;
-  transition:.25s;
-  cursor:pointer;
-}
-
-.vendor-card:hover {
-  background:#0f172a;
-  border-color:#64748b;
-}
-
-.vendor-card.selected {
-  background:#334155;
-  border-color:#a855f7;
-  box-shadow:0 0 18px rgba(168,85,247,.4);
-}
-
-/* 🎬 ANIMATION */
-@keyframes slideUp {
-  from {opacity:0; transform: translateY(30px);}
-  to {opacity:1; transform: translateY(0);}
-}
-
-/* ✨ TEXT */
-.header {
-  font-size:1.6rem;
-  font-weight:700;
-  color:#f43f5e;
-  margin-bottom:22px;
+  box-shadow: 0 25px 50px rgba(0,0,0,.6);
 }
 
 .title {
-  font-size:2.1rem;
-  font-weight:700;
-  color:white;
+  font-size: 2rem;
+  margin-bottom: 10px;
 }
 
 .subtitle {
-  color:#94a3b8;
-  margin-bottom:32px;
-  font-size:1.1rem;
+  color: #94a3b8;
+  margin-bottom: 30px;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid #475569;
+  background: #334155;
+  color: white;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg,#f43f5e,#a855f7);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+  gap: 22px;
+}
+
+.selection-card, .vendor-card {
+  background: #1e293b;
+  padding: 22px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.selection-card:hover,
+.vendor-card:hover {
+  transform: translateY(-5px);
+}
+
+.vendor-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.vendor-card.selected {
+  border: 2px solid #f43f5e;
+}
+
+.rating {
+  color: #f59e0b;
+}
+
+.vendors-wrap {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.center-btn {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.itinerary-item {
+  background:#0f172a;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:12px;
+  border-left:4px solid #f43f5e;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+  color: #a855f7;
+}
+
+.success {
+  color:#22c55e;
+  margin-top:20px;
+}
+
+@keyframes spin {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
+
+@media (max-width:600px) {
+  .card { padding: 28px; }
+  .title { font-size: 1.6rem; }
 }

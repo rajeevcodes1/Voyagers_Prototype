@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './App.css'
-import { Sparkles, Briefcase, Heart, Star, ArrowRight, CheckCircle, Loader2, LogIn, MapPin, Calendar, Users } from 'lucide-react'
+import { Sparkles, Briefcase, Heart, Star, ArrowRight, CheckCircle, Loader2, LogIn } from 'lucide-react'
 
 const VENDORS = [
   { id:1, name:"Eternal Vows", rating:4.9, type:'WEDDING', img:"https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac" },
@@ -16,25 +16,22 @@ const VENDORS = [
 
 const ITINERARY = {
   WEDDING: [
-    "Welcome brunch & guest arrivals",
-    "Traditional ceremonies & decor setup",
+    "Guest welcome & luxury brunch",
+    "Decor setup & ceremonies",
     "Sunset wedding rituals",
-    "Grand reception with live entertainment"
+    "Reception with live entertainment"
   ],
   MICE: [
-    "Registration & networking breakfast",
-    "Keynote sessions & workshops",
-    "Lunch with exhibitors",
-    "Closing ceremony & business mixer"
+    "Registration & networking",
+    "Keynote sessions",
+    "Lunch + expo walkthrough",
+    "Closing & cocktail meet"
   ]
 }
 
 export default function App() {
   const [step, setStep] = useState('login')
   const [eventType, setEventType] = useState('')
-  const [location, setLocation] = useState('')
-  const [date, setDate] = useState('')
-  const [guests, setGuests] = useState('')
   const [selectedVendors, setSelectedVendors] = useState([])
 
   const toggleVendor = id => {
@@ -55,11 +52,11 @@ export default function App() {
         <div className="card">
           <LogIn size={46} color="#f43f5e"/>
           <h2 className="title">Welcome Back</h2>
-          <p className="subtitle">Access your event dashboard</p>
+          <p className="subtitle">Plan & manage premium events effortlessly</p>
           <input placeholder="Email address" />
           <input placeholder="Password" type="password" />
           <button className="btn-primary" onClick={() => setStep('type')}>
-            Login Securely
+            Secure Login
           </button>
         </div>
       )}
@@ -67,50 +64,28 @@ export default function App() {
       {/* EVENT TYPE */}
       {step === 'type' && (
         <div className="card">
-          <h2 className="title">What are you planning?</h2>
+          <h2 className="title">Choose Your Event</h2>
           <div className="grid-2">
-            <div className="selection-card" onClick={() => { setEventType('WEDDING'); setStep('details') }}>
+            <div className="selection-card" onClick={() => { setEventType('WEDDING'); setStep('vendors') }}>
               <Heart size={42} color="#f43f5e"/>
               <h3>Destination Wedding</h3>
               <p className="subtitle">Luxury celebrations worldwide</p>
             </div>
 
-            <div className="selection-card" onClick={() => { setEventType('MICE'); setStep('details') }}>
+            <div className="selection-card" onClick={() => { setEventType('MICE'); setStep('vendors') }}>
               <Briefcase size={42} color="#38bdf8"/>
-              <h3>MICE & Corporate Events</h3>
-              <p className="subtitle">Meetings, expos & conferences</p>
+              <h3>MICE & Corporate</h3>
+              <p className="subtitle">Meetings & conferences</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* DETAILS */}
-      {step === 'details' && (
-        <div className="card">
-          <h2 className="title">Event Details</h2>
-          <p className="subtitle">Help us personalise your experience</p>
-
-          <input placeholder="Event location" value={location} onChange={e => setLocation(e.target.value)} />
-          <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-
-          <select value={guests} onChange={e => setGuests(e.target.value)}>
-            <option>50 – 100 Guests</option>
-            <option>100 – 300 Guests</option>
-            <option>300 – 500 Guests</option>
-            <option>500+ Guests</option>
-          </select>
-
-          <button className="btn-primary" onClick={() => setStep('vendors')}>
-            Find Vendors <ArrowRight size={18}/>
-          </button>
-        </div>
-      )}
-
       {/* VENDORS */}
       {step === 'vendors' && (
-        <div style={{width:'100%',maxWidth:1100}}>
-          <h2 className="title">Top Rated Vendors</h2>
-          <p className="subtitle">Selected for quality & reliability</p>
+        <div className="vendors-wrap">
+          <h2 className="title">Top Curated Vendors</h2>
+          <p className="subtitle">Trusted premium partners</p>
 
           <div className="grid-3">
             {VENDORS.filter(v => v.type === eventType).map(v => (
@@ -119,20 +94,16 @@ export default function App() {
                 className={`vendor-card ${selectedVendors.includes(v.id) ? 'selected' : ''}`}
                 onClick={() => toggleVendor(v.id)}
               >
-                <img 
-                  src={v.img} 
-                  alt={v.name}
-                  style={{width:'100%',height:150,objectFit:'cover',borderRadius:12,marginBottom:12}}
-                />
+                <img src={v.img} alt={v.name} />
                 <h3>{v.name}</h3>
-                <div style={{color:'#f59e0b'}}><Star size={14}/> {v.rating}</div>
+                <div className="rating"><Star size={14}/> {v.rating}</div>
               </div>
             ))}
           </div>
 
-          <div style={{textAlign:'center',marginTop:40}}>
-            <button 
-              className="btn-primary" 
+          <div className="center-btn">
+            <button
+              className="btn-primary"
               disabled={!selectedVendors.length}
               onClick={() => setStep('itinerary')}
             >
@@ -145,17 +116,11 @@ export default function App() {
       {/* ITINERARY */}
       {step === 'itinerary' && (
         <div className="card">
-          <h2 className="title">Your Smart Event Itinerary</h2>
-          <p className="subtitle">Optimised for guest flow & logistics</p>
+          <h2 className="title">Your Smart Event Plan</h2>
+          <p className="subtitle">Optimized experience flow</p>
 
           {ITINERARY[eventType].map((item, i) => (
-            <div key={i} style={{
-              background:'#0f172a',
-              padding:14,
-              borderRadius:12,
-              marginBottom:12,
-              borderLeft:'4px solid #f43f5e'
-            }}>
+            <div key={i} className="itinerary-item">
               {item}
             </div>
           ))}
@@ -169,14 +134,11 @@ export default function App() {
       {/* FINAL */}
       {step === 'dashboard' && (
         <div className="card">
-          <Loader2 className="animate-spin" size={48} color="#a855f7"/>
-          <h2 className="title">Requests in Progress</h2>
-          <p className="subtitle">
-            {selectedVendors.length} vendors are preparing quotes for {location}
-          </p>
-
-          <div style={{marginTop:20,color:'#22c55e'}}>
-            <CheckCircle size={18}/> Expected responses within 1–2 hours
+          <Loader2 className="spin" size={48}/>
+          <h2 className="title">Requests Sent</h2>
+          <p className="subtitle">{selectedVendors.length} vendors preparing quotes</p>
+          <div className="success">
+            <CheckCircle size={18}/> Responses in 1–2 hours
           </div>
         </div>
       )}
