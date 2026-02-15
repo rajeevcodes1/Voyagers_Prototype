@@ -1,44 +1,45 @@
 import React, { useState } from 'react'
 import './App.css'
-import { Sparkles, Briefcase, Heart, Star, ArrowRight, CheckCircle, Loader2, LogIn } from 'lucide-react'
+import { Sparkles, Briefcase, Heart, Star, Loader2, CheckCircle, LogIn, Send, ArrowRight } from 'lucide-react'
 
-const VENDORS = [
-  { id:1, name:"Eternal Vows", rating:4.9, type:'WEDDING', img:"https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac" },
-  { id:2, name:"Royal Blossom Decor", rating:4.8, type:'WEDDING', img:"https://images.unsplash.com/photo-1522156373667-4c7234bbd804" },
-  { id:3, name:"Dream Palace Venues", rating:4.7, type:'WEDDING', img:"https://images.unsplash.com/photo-1504805572947-34fad45aed93" },
-  { id:4, name:"Luxury Moments", rating:4.9, type:'WEDDING', img:"https://images.unsplash.com/photo-1519225421980-715cb0215aed" },
-
-  { id:5, name:"Grandeur MICE", rating:4.9, type:'MICE', img:"https://images.unsplash.com/photo-1511578314322-379afb476865" },
-  { id:6, name:"Corporate Connect", rating:4.8, type:'MICE', img:"https://images.unsplash.com/photo-1503428593586-e225b39bddfe" },
-  { id:7, name:"Elite Conference Hub", rating:4.7, type:'MICE', img:"https://images.unsplash.com/photo-1505373877841-8d25f7d46678" },
-  { id:8, name:"Summit Planners", rating:4.8, type:'MICE', img:"https://images.unsplash.com/photo-1551836022-d5d88e9218df" }
+const IMAGE_POOL = [
+  "1519741497674-611481863552",
+  "1505373877841-8d25f7d46678",
+  "1511578314322-379afb476865",
+  "1523906834658-6e24ef2386f9",
+  "1503428593586-e225b39bddfe",
+  "1519225421980-715cb0215aed",
+  "1504805572947-34fad45aed93",
+  "1529634806980-85c3dd6d34ac",
+  "1497366216548-37526070297c",
+  "1551836022-d5d88e9218df"
 ]
 
-const ITINERARY = {
-  WEDDING: [
-    "Guest welcome & luxury brunch",
-    "Decor setup & ceremonies",
-    "Sunset wedding rituals",
-    "Reception with live entertainment"
-  ],
-  MICE: [
-    "Registration & networking",
-    "Keynote sessions",
-    "Lunch + expo walkthrough",
-    "Closing & cocktail meet"
-  ]
-}
+const VENDORS = Array.from({ length: 20 }).map((_, i) => ({
+  id: i + 1,
+  name: `Premium Vendor ${i + 1}`,
+  rating: (4.6 + Math.random() * 0.4).toFixed(1),
+  type: i < 10 ? 'WEDDING' : 'MICE',
+  img: `https://images.unsplash.com/photo-${IMAGE_POOL[i % IMAGE_POOL.length]}?auto=format&fit=crop&w=600&q=80`
+}))
+
+const STEPS = ['home','login','type','details','vendors','chat','done']
 
 export default function App() {
-  const [step, setStep] = useState('login')
+  const [step, setStep] = useState(0)
   const [eventType, setEventType] = useState('')
+  const [venue, setVenue] = useState('')
+  const [date, setDate] = useState('')
+  const [guests, setGuests] = useState('100 - 300')
+  const [budget, setBudget] = useState(200000)
   const [selectedVendors, setSelectedVendors] = useState([])
 
-  const toggleVendor = id => {
-    setSelectedVendors(prev =>
-      prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]
+  const next = () => setStep(s => Math.min(s + 1, STEPS.length - 1))
+
+  const toggleVendor = id =>
+    setSelectedVendors(v =>
+      v.includes(id) ? v.filter(x => x !== id) : [...v, id]
     )
-  }
 
   return (
     <div className="container">
@@ -47,102 +48,132 @@ export default function App() {
         <Sparkles size={22}/> TBO Smart Event Planner
       </div>
 
-      {/* LOGIN */}
-      {step === 'login' && (
-        <div className="card">
-          <LogIn size={46} color="#f43f5e"/>
-          <h2 className="title">Welcome Back</h2>
-          <p className="subtitle">Plan & manage premium events effortlessly</p>
-          <input placeholder="Email address" />
-          <input placeholder="Password" type="password" />
-          <button className="btn-primary" onClick={() => setStep('type')}>
-            Secure Login
+      {/* HOME PAGE */}
+      {STEPS[step] === 'home' && (
+        <div className="home animate">
+          <h1>Simplifying Premium Group Experiences</h1>
+          <p>
+            From complex corporate MICE events to dreamy destination weddings and large group travel —
+            we connect you instantly with trusted vendors, smart itineraries, and real-time planning.
+          </p>
+
+          <div className="home-features">
+            <span>✈️ Group Travel Made Easy</span>
+            <span>🏢 Corporate & MICE Events</span>
+            <span>💍 Destination Weddings</span>
+            <span>🤝 Verified Premium Vendors</span>
+            <span>📊 Smart Budget Planning</span>
+          </div>
+
+          <button className="btn-primary hero-btn" onClick={next}>
+            Start Planning <ArrowRight size={18}/>
           </button>
         </div>
       )}
 
-      {/* EVENT TYPE */}
-      {step === 'type' && (
-        <div className="card">
-          <h2 className="title">Choose Your Event</h2>
-          <div className="grid-2">
-            <div className="selection-card" onClick={() => { setEventType('WEDDING'); setStep('vendors') }}>
-              <Heart size={42} color="#f43f5e"/>
-              <h3>Destination Wedding</h3>
-              <p className="subtitle">Luxury celebrations worldwide</p>
-            </div>
-
-            <div className="selection-card" onClick={() => { setEventType('MICE'); setStep('vendors') }}>
-              <Briefcase size={42} color="#38bdf8"/>
-              <h3>MICE & Corporate</h3>
-              <p className="subtitle">Meetings & conferences</p>
-            </div>
-          </div>
+      {/* PROGRESS AFTER HOME */}
+      {step > 1 && (
+        <div className="progress-wrap">
+          <div
+            className="progress"
+            style={{ width: `${((step-1) / (STEPS.length - 2)) * 100}%` }}
+          />
         </div>
       )}
 
-      {/* VENDORS */}
-      {step === 'vendors' && (
-        <div className="vendors-wrap">
-          <h2 className="title">Top Curated Vendors</h2>
-          <p className="subtitle">Trusted premium partners</p>
+      <div className="step-wrapper">
 
-          <div className="grid-3">
-            {VENDORS.filter(v => v.type === eventType).map(v => (
-              <div
-                key={v.id}
-                className={`vendor-card ${selectedVendors.includes(v.id) ? 'selected' : ''}`}
-                onClick={() => toggleVendor(v.id)}
-              >
-                <img src={v.img} alt={v.name} />
-                <h3>{v.name}</h3>
-                <div className="rating"><Star size={14}/> {v.rating}</div>
-              </div>
-            ))}
+        {STEPS[step] === 'login' && (
+          <div className="card animate">
+            <LogIn size={42}/>
+            <h2>Welcome Back</h2>
+            <input placeholder="Email"/>
+            <input placeholder="Password" type="password"/>
+            <button className="btn-primary" onClick={next}>Login</button>
           </div>
+        )}
 
-          <div className="center-btn">
-            <button
-              className="btn-primary"
-              disabled={!selectedVendors.length}
-              onClick={() => setStep('itinerary')}
-            >
-              Build Event Itinerary
+        {STEPS[step] === 'type' && (
+          <div className="card animate">
+            <h2>Select Event Type</h2>
+            <div className="grid-2">
+              <div className="selection-card" onClick={()=>{setEventType('WEDDING');next()}}>
+                <Heart size={40}/> Destination Wedding
+              </div>
+              <div className="selection-card" onClick={()=>{setEventType('MICE');next()}}>
+                <Briefcase size={40}/> Corporate / MICE
+              </div>
+            </div>
+          </div>
+        )}
+
+        {STEPS[step] === 'details' && (
+          <div className="card animate">
+            <h2>Event Details</h2>
+            <input placeholder="Venue / City" value={venue} onChange={e=>setVenue(e.target.value)}/>
+            <input type="date" value={date} onChange={e=>setDate(e.target.value)}/>
+            <select value={guests} onChange={e=>setGuests(e.target.value)}>
+              <option>50 – 100 Guests</option>
+              <option>100 – 300 Guests</option>
+              <option>300 – 500 Guests</option>
+              <option>500+ Guests</option>
+            </select>
+
+            <div className="budget">
+              Budget ₹{budget.toLocaleString()}
+              <input type="range" min="50000" max="1000000" value={budget}
+                     onChange={e=>setBudget(+e.target.value)} />
+            </div>
+
+            <button className="btn-primary" onClick={next}>Find Vendors</button>
+          </div>
+        )}
+
+        {STEPS[step] === 'vendors' && (
+          <div className="vendors-wrap animate">
+            <h2>Premium Vendors</h2>
+
+            <div className="grid-3">
+              {VENDORS.filter(v=>v.type===eventType).map(v=>(
+                <div
+                  key={v.id}
+                  className={`vendor-card ${selectedVendors.includes(v.id)?'selected':''}`}
+                  onClick={()=>toggleVendor(v.id)}
+                >
+                  <img src={v.img} alt={v.name}/>
+                  <h3>{v.name}</h3>
+                  ⭐ {v.rating}
+                </div>
+              ))}
+            </div>
+
+            <button className="btn-primary" disabled={!selectedVendors.length} onClick={next}>
+              Chat with Vendors
             </button>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ITINERARY */}
-      {step === 'itinerary' && (
-        <div className="card">
-          <h2 className="title">Your Smart Event Plan</h2>
-          <p className="subtitle">Optimized experience flow</p>
-
-          {ITINERARY[eventType].map((item, i) => (
-            <div key={i} className="itinerary-item">
-              {item}
+        {STEPS[step] === 'chat' && (
+          <div className="card animate chat">
+            <div className="msg vendor">We can plan something amazing in {venue}!</div>
+            <div className="msg user">Please share packages.</div>
+            <div className="chat-input">
+              <input placeholder="Type message"/>
+              <Send size={18}/>
             </div>
-          ))}
-
-          <button className="btn-primary" onClick={() => setStep('dashboard')}>
-            Send Vendor Requests
-          </button>
-        </div>
-      )}
-
-      {/* FINAL */}
-      {step === 'dashboard' && (
-        <div className="card">
-          <Loader2 className="spin" size={48}/>
-          <h2 className="title">Requests Sent</h2>
-          <p className="subtitle">{selectedVendors.length} vendors preparing quotes</p>
-          <div className="success">
-            <CheckCircle size={18}/> Responses in 1–2 hours
+            <button className="btn-primary" onClick={next}>Confirm</button>
           </div>
-        </div>
-      )}
+        )}
 
+        {STEPS[step] === 'done' && (
+          <div className="card animate">
+            <Loader2 className="spin"/>
+            <CheckCircle/>
+            <p>Requests sent successfully!</p>
+          </div>
+        )}
+
+      </div>
     </div>
   )
 }
